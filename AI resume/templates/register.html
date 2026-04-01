@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card p-4 mt-5 shadow">
+            <h2 class="text-center fw-bold mb-4">Create an Account</h2>
+            <form method="POST" action="{{ url_for('auth_bp.register_page') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="mb-3">
+                    <label class="form-label text-muted fw-bold">Username</label>
+                    <input type="text" name="username" class="form-control" required placeholder="Choose a username">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-muted fw-bold">Email</label>
+                    <input type="email" name="email" class="form-control" required placeholder="Enter your email">
+                </div>
+                <div class="mb-4">
+                    <label class="form-label text-muted fw-bold">Password</label>
+                    <input type="password" name="password" class="form-control" required
+                        placeholder="Create a password">
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2">Register</button>
+            </form>
+            <div class="text-center mt-3">
+                <span class="text-muted">Already have an account?</span> <a href="{{ url_for('auth_bp.login_page') }}"
+                    class="text-decoration-none fw-bold">Login</a>
+            </div>
+            {% if error %}
+            <div class="alert alert-danger mt-3 mb-0 py-2 text-center">{{ error }}</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

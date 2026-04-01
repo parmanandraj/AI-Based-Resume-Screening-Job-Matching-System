@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mb-4 d-flex justify-content-between align-items-center">
+    <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary fw-bold">&larr; Back to Dashboard</a>
+    <h3 class="fw-bold mb-0">Analysis Report: <span class="text-primary">{{ resume.filename }}</span></h3>
+</div>
+
+<div class="row g-4">
+    <!-- Score Section -->
+    <div class="col-lg-4">
+        <div class="card h-100 p-4 text-center">
+            <h4 class="fw-bold mb-4">Overall Score</h4>
+            {% set score_class = 'score-poor' %}
+            {% if resume.score >= 80 %}
+            {% set score_class = 'score-excellent' %}
+            {% elif resume.score >= 50 %}
+            {% set score_class = 'score-good' %}
+            {% elif resume.score >= 30 %}
+            {% set score_class = 'score-average' %}
+            {% endif %}
+
+            <div class="score-circle mb-4 {{ score_class }}">
+                {{ resume.score }}%
+            </div>
+
+            {% if resume.job_match_score %}
+            <div class="mt-4 p-3 bg-light rounded shadow-sm border text-start">
+                <h6 class="text-muted fw-bold mb-2 text-center">Job Description Match</h6>
+                <div class="fs-1 fw-bold text-dark text-center">{{ resume.job_match_score }}%</div>
+                <div class="progress mt-2" style="height: 8px;">
+                    <div class="progress-bar bg-info" role="progressbar" style="width: {{ resume.job_match_score }}%"
+                        aria-valuenow="{{ resume.job_match_score }}" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Details Section -->
+    <div class="col-lg-8">
+        <div class="card h-100 p-4 shadow-sm">
+            <!-- Strengths -->
+            <h5 class="fw-bold text-success mb-3">✅ Correct & Strong</h5>
+            <ul class="list-group list-group-flush mb-4 border rounded shadow-sm">
+                {% for item in strong %}
+                <li class="list-group-item bg-transparent text-dark border-bottom"><i class="text-success me-2">✔</i> {{
+                    item }}</li>
+                {% else %}
+                <li class="list-group-item text-muted">No specific strengths detected.</li>
+                {% endfor %}
+            </ul>
+
+            <!-- Weaknesses -->
+            <h5 class="fw-bold text-danger mb-3">❌ Weak or Missing</h5>
+            <ul class="list-group list-group-flush mb-4 border rounded shadow-sm">
+                {% for item in missing %}
+                <li class="list-group-item bg-transparent text-dark border-bottom"><i class="text-danger me-2">✖</i>
+                    Missing: {{ item }}</li>
+                {% endfor %}
+                {% for item in weak %}
+                <li class="list-group-item bg-transparent text-dark border-bottom"><i
+                        class="text-warning text-dark me-2">⚠</i> Weak: {{ item }}</li>
+                {% endfor %}
+                {% if not missing and not weak %}
+                <li class="list-group-item text-success fw-bold">No specific weaknesses detected! Great job!</li>
+                {% endif %}
+            </ul>
+
+            <!-- Extracted Skills -->
+            <h5 class="fw-bold text-primary mb-3 mt-4">🛠 Extracted Skills</h5>
+            <div class="d-flex flex-wrap gap-2">
+                {% for skill in skills_list %}
+                <span class="badge-skill border shadow-sm">{{ skill }}</span>
+                {% else %}
+                <span class="text-muted">No technical skills detected automatically.</span>
+                {% endfor %}
+            </div>
+
+            <!-- Overall Feedback -->
+            <div class="mt-5 p-4 bg-light rounded text-dark fs-6 border-start border-4 border-primary">
+                <h6 class="fw-bold text-primary">💡 AI Recommendation</h6>
+                <p class="mb-0">Make sure your resume format is clean and ATS-friendly (no images, complex tables, or
+                    fancy graphics). Focus on quantifiable achievements in your experience section to boost your score
+                    further. <strong>Action words</strong>, <strong>numbers</strong>, and <strong>industry
+                        keywords</strong> are key.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

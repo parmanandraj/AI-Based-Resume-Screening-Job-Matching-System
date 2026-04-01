@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mb-4 d-flex justify-content-between align-items-center">
+    <h2 class="fw-bold">Admin Dashboard</h2>
+    <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary fw-bold">User Dashboard</a>
+</div>
+
+<div class="row g-4 mb-5">
+    <!-- Stat 1 -->
+    <div class="col-md-6">
+        <div class="card p-4 text-center bg-primary text-white shadow border-0">
+            <h5 class="fw-bold mb-2">Total Users</h5>
+            <div class="display-3 fw-bold">{{ u_count }}</div>
+        </div>
+    </div>
+    <!-- Stat 2 -->
+    <div class="col-md-6">
+        <div class="card p-4 text-center bg-success text-white shadow border-0">
+            <h5 class="fw-bold mb-2">Resumes Analyzed</h5>
+            <div class="display-3 fw-bold">{{ r_count }}</div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <div class="card p-4 shadow-sm h-100">
+            <h4 class="fw-bold mb-3">All Users</h4>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Role</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for u in users %}
+                        <tr>
+                            <td><span class="text-muted">#{{ u.id }}</span></td>
+                            <td class="fw-bold">{{ u.username }}</td>
+                            <td>
+                                {% if u.role == 'admin' %}
+                                <span class="badge bg-danger rounded-pill">Admin</span>
+                                {% else %}
+                                <span class="badge bg-secondary rounded-pill">User</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6 mb-4">
+        <div class="card p-4 shadow-sm h-100">
+            <h4 class="fw-bold mb-3">Recent Analyses</h4>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>User ID</th>
+                            <th>File Name</th>
+                            <th>Score</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for r in recent_resumes %}
+                        <tr>
+                            <td><span class="text-muted">#{{ r.user_id }}</span></td>
+                            <td class="fw-bold">{{ r.filename }}</td>
+                            <td>
+                                <span class="badge bg-dark rounded-pill">{{ r.score }}%</span>
+                            </td>
+                            <td><small class="text-muted">{{ r.upload_date.strftime('%Y-%m-%d') }}</small></td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center text-muted py-3">No resumes analyzed yet.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
